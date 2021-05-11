@@ -260,11 +260,13 @@ match_topic_filter(TopicName, TopicFilter) ->
 
 -spec do_call(string(), atom(), map()) -> {ok, map()} | {error, term()}.
 do_call(ChannName, Fun, Req) ->
+    BeginTime = erlang:system_time(millisecond),
     Options = #{channel => ChannName},
-    ?LOG(debug, "Call ~0p:~0p(~0p, ~0p)", [?PB_CLIENT_MOD, Fun, Req, Options]),
+    ?LOG(info, "Call ~0p:~0p(~0p, ~0p)", [?PB_CLIENT_MOD, Fun, Req, Options]),
     case catch apply(?PB_CLIENT_MOD, Fun, [Req, Options]) of
         {ok, Resp, _Metadata} ->
-            ?LOG(debug, "Response {ok, ~0p, ~0p}", [Resp, _Metadata]),
+            TimeElapsed = erlang:system_time(millisecond) - BeginTime,
+            ?LOG(info, "Response {ok, ~0p, ~0p}, elapsed ~0p", [Resp, _Metadata, TimeElapsed]),
             {ok, Resp};
         {error, {Code, Msg}, _Metadata} ->
             ?LOG(error, "CALL ~0p:~0p(~0p, ~0p) response errcode: ~0p, errmsg: ~0p",

@@ -69,7 +69,7 @@ trace(publish, #message{topic = <<"$SYS/", _/binary>>}) ->
     ignore;
 trace(publish, #message{from = From, topic = Topic, payload = Payload})
         when is_binary(From); is_atom(From) ->
-    emqx_logger:info(#{topic => Topic,
+    emqx_logger:debug(#{topic => Topic,
                        mfa => {?MODULE, ?FUNCTION_NAME, ?FUNCTION_ARITY} },
                      "PUBLISH to ~s: ~0p", [Topic, Payload]).
 

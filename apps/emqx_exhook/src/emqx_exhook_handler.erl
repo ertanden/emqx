@@ -187,6 +187,7 @@ on_session_terminated(ClientInfo, Reason, _SessInfo) ->
 on_message_publish(#message{topic = <<"$SYS/", _/binary>>}) ->
     ok;
 on_message_publish(Message) ->
+
     Req = #{message => message(Message)},
     case call_fold('message.publish', Req,
                    fun emqx_exhook_handler:merge_responsed_message/2) of
